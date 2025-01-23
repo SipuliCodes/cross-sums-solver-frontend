@@ -1,0 +1,36 @@
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.header {
+    margin-bottom: 0;
+}
+
+.grid-size-box {
+    display: flex;
+    align-items: center;
+}
+
+.grid-size-header {
+    margin: 0;
+}
+
+.grid-size-input {
+    height: 16px;
+    width: 16px;
+    margin-left: 4px;
+    text-align: center;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
