@@ -1,5 +1,31 @@
-<div [ngStyle]="gridStyles" class="cross-sum-grid">
-  <div *ngFor="let cell of [].constructor(rows * columns)" 
-       class="grid-cell">
+<div class="cross-sum-grid">
+  <div class="grid-col-targets">
+  <input 
+  type="number" 
+  min="1" 
+  max="30" 
+  *ngFor="let cell of [].constructor(rows)" 
+  class="grid-target-cell"
+  (change)="validateInput($event, 1, 30)"/>
+  </div>
+  <div class="grid-rows">
+    <div class="grid-row-targets">
+      <input 
+      type="number" 
+      min="1" 
+      max="30" 
+      *ngFor="let cell of [].constructor(columns)" 
+      class="grid-target-cell"
+      (change)="validateInput($event, 1, 30)"/>
+    </div>
+    <div [ngStyle]="gridStyles">
+      <input 
+        type="number" 
+        min="1" 
+        max="30" 
+        *ngFor="let cell of [].constructor(rows * columns)" 
+        class="grid-cell" 
+        (change)="validateInput($event, 1, 30)"/>
+    </div>
   </div>
 </div>

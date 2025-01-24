@@ -1,7 +1,48 @@
 .cross-sum-grid {
-  border: 1px solid #000;
+  display: flex;
+  flex-direction: column;
+}
+
+.grid-col-targets {
+  display: flex;
+  padding-left: 40px;
+  justify-content: space-evenly;
+}
+
+.grid-rows {
+  display: flex;
+  flex-direction: row;
+}
+
+.grid-row-targets {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.grid-target-cell {
+  background-color: #BEDCED;
+  text-align: center;
+  border: none;
+  margin: 2px;
+  padding: 2px;
+  font-weight: bold;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
 }
 
 .grid-cell {
   border: 1px solid #ccc;
+  text-align: center;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
 }
