@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'cross-sum-grid',

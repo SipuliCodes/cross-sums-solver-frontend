@@ -3,7 +3,7 @@
     <h1 class="header">Cross sums checker</h1>
     <div class="grid-size-box">
       <h3 class="grid-size-heaeder">Grid size:</h3>
-      <input class="grid-size-input" type="number" />
+      <input [(ngModel)]="gridSize" (input)="changeGridSize(4,10)" min="4" max="10" class="grid-size-input" type="number" />
     </div>
     <cross-sum-grid
       [rows]="gridRows"
