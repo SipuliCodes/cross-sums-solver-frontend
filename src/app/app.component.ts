@@ -17,7 +17,7 @@ export class AppComponent {
   gridColumns: number = this.gridSize;
   gridCellSize: number = 40;
 
-  changeGridSize( min: number, max: number) {
+  changeGridSize(min: number, max: number) {
     if (this.gridSize < min) {
       this.gridSize = min;
     } else if (this.gridSize > max) {
@@ -26,5 +26,11 @@ export class AppComponent {
 
     this.gridRows = this.gridSize;
     this.gridColumns = this.gridSize;
+  }
+
+  handleFocus(event: FocusEvent): void {
+    const input = event.target as HTMLInputElement;
+
+    setTimeout(() => input.select(), 0);
   }
 }
