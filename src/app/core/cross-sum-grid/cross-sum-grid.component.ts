@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'cross-sum-grid',
@@ -25,6 +24,74 @@ export class CrossSumGrid {
     }
 
     input.value = value.toString();
+  }
+
+  handleKeydown(event: KeyboardEvent, index: number): void {
+    const row = Math.floor(index / this.rows);
+    const col = index % this.columns;
+
+    let upDownLeftRightKey: boolean = false;
+    let nextIndex: number | null = null;
+
+    switch (event.key) {
+      case 'ArrowUp':
+        upDownLeftRightKey = true;
+        if (row > 0) {
+          nextIndex = index - this.columns;
+        }
+        break;
+
+      case 'ArrowDown':
+        upDownLeftRightKey = true;
+        if (row < this.rows - 1) {
+          nextIndex = index + this.columns;
+        }
+        break;
+
+      case 'ArrowLeft':
+        upDownLeftRightKey = true;
+        if (col > 0) {
+          nextIndex = index - 1;
+        }
+        break;
+
+      case 'ArrowRight':
+        upDownLeftRightKey = true;
+        if (col < this.columns - 1) {
+          nextIndex = index + 1;
+        }
+        break;
+
+      case 'Tab':
+        return;
+
+      default:
+        return;
+    }
+
+    if (upDownLeftRightKey) {
+      event.preventDefault();
+    }
+
+    if (nextIndex !== null) {
+      event.preventDefault();
+      this.focusCell(nextIndex);
+    }
+  }
+
+  focusCell(index: number): void {
+    const inputs = document.querySelectorAll(
+      '.grid-cell'
+    ) as NodeListOf<HTMLInputElement>;
+    if (inputs[index]) {
+      inputs[index].focus();
+    }
+  }
+
+  handleFocus(event: FocusEvent): void {
+    const input = event.target as HTMLInputElement;
+    
+    setTimeout(() => input.select(), 0);
   }
 
   get gridStyles() {
