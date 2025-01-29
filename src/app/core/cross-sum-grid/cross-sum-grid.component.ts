@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -9,9 +9,39 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./cross-sum-grid.component.scss'],
 })
 export class CrossSumGrid {
-  @Input() rows: number = 5;
-  @Input() columns: number = 5;
-  @Input() cellSize: number = 50;
+  @Input() rows!: number;
+  @Input() columns!: number;
+  @Input() cellSize!: number;
+  @Input() rowTargetIndices!: number[];
+  @Input() colTargetIndices!: number[];
+  @Input() gridIndices!: number[];
+
+  ngOnChanges(changes: SimpleChanges) {
+    for (let name in changes) {
+      let change = changes[name];
+      if (name == "rows") {
+        this.rows = change.currentValue;
+      } else if (name == "columns") {
+        this.columns = change.currentValue;
+      }
+    }
+    this.calculateIndices()
+  }
+
+  calculateIndices() {
+    this.rowTargetIndices = Array.from({ length: this.columns }, (_, i) => i);
+    this.colTargetIndices = Array.from(
+      { length: this.rows },
+      (_, i) => (i + 1) * this.rows + i
+    );
+    this.gridIndices = Array.from(
+      { length: this.rows * this.columns },
+      (_, i) =>
+        (Math.floor(i / this.columns) + 1) * this.columns +
+        Math.floor(i / this.columns) +
+        (i % this.rows) + 1
+    );
+  }
 
   validateInput(event: Event, min: number, max: number): void {
     const input = event.target as HTMLInputElement;
@@ -27,8 +57,9 @@ export class CrossSumGrid {
   }
 
   handleKeydown(event: KeyboardEvent, index: number): void {
-    const row = Math.floor(index / this.rows);
-    const col = index % this.columns;
+    console.log(index)
+    const row = Math.floor(index / (this.rows + 1));
+    const col = index % (this.columns+1);
 
     let upDownLeftRightKey: boolean = false;
     let nextIndex: number | null = null;
@@ -37,14 +68,14 @@ export class CrossSumGrid {
       case 'ArrowUp':
         upDownLeftRightKey = true;
         if (row > 0) {
-          nextIndex = index - this.columns;
+          nextIndex = index - this.columns - 1;
         }
         break;
 
       case 'ArrowDown':
         upDownLeftRightKey = true;
-        if (row < this.rows - 1) {
-          nextIndex = index + this.columns;
+        if (row < this.rows) {
+          nextIndex = index + this.columns + 1;
         }
         break;
 
@@ -52,12 +83,14 @@ export class CrossSumGrid {
         upDownLeftRightKey = true;
         if (col > 0) {
           nextIndex = index - 1;
+        } else if (col >= 0 && row > 0) {
+          nextIndex = index - 1;
         }
         break;
 
       case 'ArrowRight':
         upDownLeftRightKey = true;
-        if (col < this.columns - 1) {
+        if (col <= this.columns) {
           nextIndex = index + 1;
         }
         break;
@@ -75,16 +108,17 @@ export class CrossSumGrid {
 
     if (nextIndex !== null) {
       event.preventDefault();
+      console.log(nextIndex)
       this.focusCell(nextIndex);
     }
   }
 
   focusCell(index: number): void {
-    const inputs = document.querySelectorAll(
-      '.grid-cell'
-    ) as NodeListOf<HTMLInputElement>;
-    if (inputs[index]) {
-      inputs[index].focus();
+    const input = document.getElementById(`cell-${index}`
+    ) as HTMLInputElement;
+    console.log(input)
+    if (input) {
+      input.focus();
     }
   }
 

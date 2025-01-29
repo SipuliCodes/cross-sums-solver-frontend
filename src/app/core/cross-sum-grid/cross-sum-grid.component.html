@@ -4,9 +4,12 @@
   type="number" 
   min="1" 
   max="30" 
-  *ngFor="let cell of [].constructor(rows)" 
+  *ngFor="let cell of [].constructor(rows); let i = index;"
+  [id]="'cell-' + rowTargetIndices[i]"
   class="grid-target-cell"
-  (change)="validateInput($event, 1, 30)"/>
+  (change)="validateInput($event, 1, 30)"
+  (keydown)="handleKeydown($event, rowTargetIndices[i])"
+  (focus)="handleFocus($event)"/>
   </div>
   <div class="grid-rows">
     <div class="grid-row-targets">
@@ -14,9 +17,12 @@
       type="number" 
       min="1" 
       max="30" 
-      *ngFor="let cell of [].constructor(columns)" 
+      *ngFor="let cell of [].constructor(columns); let i = index;" 
+      [id]="'cell-' + colTargetIndices[i]"
       class="grid-target-cell"
       (change)="validateInput($event, 1, 30)"
+      (keydown)="handleKeydown($event, colTargetIndices[i])"
+      (focus)="handleFocus($event)"
       />
       
     </div>
@@ -26,9 +32,10 @@
         min="1" 
         max="30" 
         *ngFor="let cell of [].constructor(rows * columns); let i = index;" 
+        [id]="'cell-' + gridIndices[i]"
         class="grid-cell" 
         (change)="validateInput($event, 1, 30)"
-        (keydown)="handleKeydown($event, i)"
+        (keydown)="handleKeydown($event, gridIndices[i])"
         (focus)="handleFocus($event)"/>
     </div>
   </div>
