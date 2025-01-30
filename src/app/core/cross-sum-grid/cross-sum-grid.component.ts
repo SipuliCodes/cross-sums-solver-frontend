@@ -16,16 +16,33 @@ export class CrossSumGrid {
   colTargetIndices!: number[];
   gridIndices!: number[];
 
+  rowTargets: number[] = [];
+  colTargets: number[] = [];
+  grid: number[] = [];
+  rowWeights!: number[][];
+  colWeights!: number[][];
+
   ngOnChanges(changes: SimpleChanges) {
     for (let name in changes) {
       let change = changes[name];
-      if (name == "rows") {
+      if (name == 'rows') {
         this.rows = change.currentValue;
-      } else if (name == "columns") {
+        this.rowWeights = [];
+        this.rowTargets = [];
+        for (let i = 0; i < this.rows; i++) {
+          this.rowWeights.push([]);
+        }
+      } else if (name == 'columns') {
         this.columns = change.currentValue;
+        this.colWeights = [];
+        this.colTargets = [];
+        this.grid = [];
+        for (let i = 0; i < this.columns; i++) {
+          this.colWeights.push([]);
+        }
       }
     }
-    this.calculateIndices()
+    this.calculateIndices();
   }
 
   calculateIndices() {
@@ -39,12 +56,30 @@ export class CrossSumGrid {
       (_, i) =>
         (Math.floor(i / this.columns) + 1) * this.columns +
         Math.floor(i / this.columns) +
-        (i % this.rows) + 1
+        (i % this.rows) +
+        1
     );
   }
 
-  validateInput(event: Event, min: number, max: number): void {
+  changeInput(event: Event, index: number, name: string) {
     const input = event.target as HTMLInputElement;
+    const validatedInput = this.validateInput(input, 1, 30)
+    if (name == "row") {
+      this.rowTargets[index] = validatedInput;
+    } else if (name == "col") {
+      this.colTargets[index] = validatedInput;
+    } else if (name == "grid") {
+      const row = Math.floor(index / this.rows) 
+      const col = index % this.columns;
+      this.grid[index] = validatedInput;
+      this.rowWeights[row][col] = validatedInput;
+      this.colWeights[col][row] = validatedInput;
+    }
+
+    input.value = validatedInput.toString();
+  }
+
+  validateInput(input: HTMLInputElement, min: number, max: number): number {
     let value = parseInt(input.value, 10);
 
     if (value < min) {
@@ -53,12 +88,12 @@ export class CrossSumGrid {
       value = max;
     }
 
-    input.value = value.toString();
+    return value;
   }
 
   handleKeydown(event: KeyboardEvent, index: number): void {
     const row = Math.floor(index / (this.rows + 1));
-    const col = index % (this.columns+1);
+    const col = index % (this.columns + 1);
 
     let upDownLeftRightKey: boolean = false;
     let nextIndex: number | null = null;
@@ -112,8 +147,7 @@ export class CrossSumGrid {
   }
 
   focusCell(index: number): void {
-    const input = document.getElementById(`cell-${index}`
-    ) as HTMLInputElement;
+    const input = document.getElementById(`cell-${index}`) as HTMLInputElement;
     if (input) {
       input.focus();
     }
@@ -121,7 +155,7 @@ export class CrossSumGrid {
 
   handleFocus(event: FocusEvent): void {
     const input = event.target as HTMLInputElement;
-    
+
     setTimeout(() => input.select(), 0);
   }
 

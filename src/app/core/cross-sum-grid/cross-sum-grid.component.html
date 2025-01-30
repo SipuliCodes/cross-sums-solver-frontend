@@ -3,11 +3,12 @@
   <input 
   type="number" 
   min="1" 
-  max="30" 
+  max="30"
+  [value]="colTargets[i]"
   *ngFor="let cell of [].constructor(rows); let i = index;"
   [id]="'cell-' + rowTargetIndices[i]"
   class="grid-target-cell"
-  (change)="validateInput($event, 1, 30)"
+  (change)="changeInput($event, i, 'col')"
   (keydown)="handleKeydown($event, rowTargetIndices[i])"
   (focus)="handleFocus($event)"/>
   </div>
@@ -17,10 +18,11 @@
       type="number" 
       min="1" 
       max="30" 
+      [value]="rowTargets[i]"
       *ngFor="let cell of [].constructor(columns); let i = index;" 
       [id]="'cell-' + colTargetIndices[i]"
       class="grid-target-cell"
-      (change)="validateInput($event, 1, 30)"
+      (change)="changeInput($event, i, 'row')"
       (keydown)="handleKeydown($event, colTargetIndices[i])"
       (focus)="handleFocus($event)"
       />
@@ -30,11 +32,12 @@
       <input 
         type="number" 
         min="1" 
-        max="30" 
+        max="30"
+        [value]="grid[i]"
         *ngFor="let cell of [].constructor(rows * columns); let i = index;" 
         [id]="'cell-' + gridIndices[i]"
         class="grid-cell" 
-        (change)="validateInput($event, 1, 30)"
+        (change)="changeInput($event, i, 'grid')"
         (keydown)="handleKeydown($event, gridIndices[i])"
         (focus)="handleFocus($event)"/>
     </div>
