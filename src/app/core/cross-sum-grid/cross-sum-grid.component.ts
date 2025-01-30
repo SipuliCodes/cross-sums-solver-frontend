@@ -57,7 +57,6 @@ export class CrossSumGrid {
   }
 
   handleKeydown(event: KeyboardEvent, index: number): void {
-    console.log(index)
     const row = Math.floor(index / (this.rows + 1));
     const col = index % (this.columns+1);
 
@@ -108,7 +107,6 @@ export class CrossSumGrid {
 
     if (nextIndex !== null) {
       event.preventDefault();
-      console.log(nextIndex)
       this.focusCell(nextIndex);
     }
   }
@@ -116,7 +114,6 @@ export class CrossSumGrid {
   focusCell(index: number): void {
     const input = document.getElementById(`cell-${index}`
     ) as HTMLInputElement;
-    console.log(input)
     if (input) {
       input.focus();
     }
