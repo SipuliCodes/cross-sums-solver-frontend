@@ -12,9 +12,9 @@ export class CrossSumGrid {
   @Input() rows!: number;
   @Input() columns!: number;
   @Input() cellSize!: number;
-  @Input() rowTargetIndices!: number[];
-  @Input() colTargetIndices!: number[];
-  @Input() gridIndices!: number[];
+  rowTargetIndices!: number[];
+  colTargetIndices!: number[];
+  gridIndices!: number[];
 
   ngOnChanges(changes: SimpleChanges) {
     for (let name in changes) {
