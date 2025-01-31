@@ -22,6 +22,8 @@ export class CrossSumGrid {
   rowWeights!: number[][];
   colWeights!: number[][];
 
+  debounceTimeout: any;
+
   ngOnChanges(changes: SimpleChanges) {
     for (let name in changes) {
       let change = changes[name];
@@ -63,13 +65,13 @@ export class CrossSumGrid {
 
   changeInput(event: Event, index: number, name: string) {
     const input = event.target as HTMLInputElement;
-    const validatedInput = this.validateInput(input, 1, 30)
-    if (name == "row") {
+    const validatedInput = this.validateInput(input, 1, 30);
+    if (name == 'row') {
       this.rowTargets[index] = validatedInput;
-    } else if (name == "col") {
+    } else if (name == 'col') {
       this.colTargets[index] = validatedInput;
-    } else if (name == "grid") {
-      const row = Math.floor(index / this.rows) 
+    } else if (name == 'grid') {
+      const row = Math.floor(index / this.rows);
       const col = index % this.columns;
       this.grid[index] = validatedInput;
       this.rowWeights[row][col] = validatedInput;
@@ -92,58 +94,57 @@ export class CrossSumGrid {
   }
 
   handleKeydown(event: KeyboardEvent, index: number): void {
-    const row = Math.floor(index / (this.rows + 1));
-    const col = index % (this.columns + 1);
+    const arrows = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight']
 
-    let upDownLeftRightKey: boolean = false;
-    let nextIndex: number | null = null;
-
-    switch (event.key) {
-      case 'ArrowUp':
-        upDownLeftRightKey = true;
-        if (row > 0) {
-          nextIndex = index - this.columns - 1;
-        }
-        break;
-
-      case 'ArrowDown':
-        upDownLeftRightKey = true;
-        if (row < this.rows) {
-          nextIndex = index + this.columns + 1;
-        }
-        break;
-
-      case 'ArrowLeft':
-        upDownLeftRightKey = true;
-        if (col > 0) {
-          nextIndex = index - 1;
-        } else if (col >= 0 && row > 0) {
-          nextIndex = index - 1;
-        }
-        break;
-
-      case 'ArrowRight':
-        upDownLeftRightKey = true;
-        if (col <= this.columns) {
-          nextIndex = index + 1;
-        }
-        break;
-
-      case 'Tab':
-        return;
-
-      default:
-        return;
+    if (arrows.includes(event.key)) {
+      event.preventDefault()
     }
+    clearTimeout(this.debounceTimeout);
+    this.debounceTimeout = setTimeout(() => {
+      const row = Math.floor(index / (this.rows + 1));
+      const col = index % (this.columns + 1);
 
-    if (upDownLeftRightKey) {
-      event.preventDefault();
-    }
+      let nextIndex: number | null = null;
 
-    if (nextIndex !== null) {
-      event.preventDefault();
-      this.focusCell(nextIndex);
-    }
+      switch (event.key) {
+        case 'ArrowUp':
+          if (row > 0) {
+            nextIndex = index - this.columns - 1;
+          }
+          break;
+
+        case 'ArrowDown':
+          if (row < this.rows) {
+            nextIndex = index + this.columns + 1;
+          }
+          break;
+
+        case 'ArrowLeft':
+          if (col > 0) {
+            nextIndex = index - 1;
+          } else if (col >= 0 && row > 0) {
+            nextIndex = index - 1;
+          }
+          break;
+
+        case 'ArrowRight':
+          if (col <= this.columns) {
+            nextIndex = index + 1;
+          }
+          break;
+
+        case 'Tab':
+          return;
+
+        default:
+          return;
+      }
+
+      if (nextIndex !== null) {
+        event.preventDefault();
+        this.focusCell(nextIndex);
+      }
+    }, 5)
   }
 
   focusCell(index: number): void {
