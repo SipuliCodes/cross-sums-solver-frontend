@@ -9,9 +9,15 @@
       [rows]="gridRows"
       [columns]="gridColumns"
       [cellSize]="gridCellSize"
+      [rowTargets]="rowTargets"
+      [colTargets]="colTargets"
+      (newRowTarget)="addRowTarget($event)"
+      (newColTarget)="addColTarget($event)"
+      (newRowWeight)="addRowWeight($event)"
+      (newColWeight)="addColWeight($event)"
     >
     </cross-sum-grid>
-    <button class="solve-button">Solve</button>
+    <button (click)="onSolveClick()" class="solve-button">Solve</button>
   </div>
 </main>
 

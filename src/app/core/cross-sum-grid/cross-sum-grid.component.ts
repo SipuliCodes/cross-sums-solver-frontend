@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input,  SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -12,15 +12,34 @@ export class CrossSumGrid {
   @Input() rows!: number;
   @Input() columns!: number;
   @Input() cellSize!: number;
+  @Input() rowTargets!: number[];
+  @Input() colTargets!: number[];
+
   rowTargetIndices!: number[];
   colTargetIndices!: number[];
   gridIndices!: number[];
-
-  rowTargets: number[] = [];
-  colTargets: number[] = [];
   grid: number[] = [];
-  rowWeights!: number[][];
-  colWeights!: number[][];
+
+  @Output() newRowTarget = new EventEmitter<number[]>();
+  @Output() newColTarget = new EventEmitter<number[]>();
+  @Output() newRowWeight = new EventEmitter<number[]>();
+  @Output() newColWeight = new EventEmitter<number[]>();
+
+  addRowTarget(index: number, value: number) {
+    this.newRowTarget.emit([index, value]);
+  }
+
+  addColTarget(index: number, value: number) {
+    this.newColTarget.emit([index, value]);
+  }
+
+  addRowWeight(row: number, col: number, value: number) {
+    this.newRowWeight.emit([row, col, value]);
+  }
+
+  addColWeight(row: number, col: number, value: number) {
+    this.newColWeight.emit([row, col, value]);
+  }
 
   debounceTimeout: any;
 
@@ -29,19 +48,9 @@ export class CrossSumGrid {
       let change = changes[name];
       if (name == 'rows') {
         this.rows = change.currentValue;
-        this.rowWeights = [];
-        this.rowTargets = [];
-        for (let i = 0; i < this.rows; i++) {
-          this.rowWeights.push([]);
-        }
       } else if (name == 'columns') {
         this.columns = change.currentValue;
-        this.colWeights = [];
-        this.colTargets = [];
         this.grid = [];
-        for (let i = 0; i < this.columns; i++) {
-          this.colWeights.push([]);
-        }
       }
     }
     this.calculateIndices();
@@ -67,15 +76,15 @@ export class CrossSumGrid {
     const input = event.target as HTMLInputElement;
     const validatedInput = this.validateInput(input, 1, 30);
     if (name == 'row') {
-      this.rowTargets[index] = validatedInput;
+      this.addRowTarget(index, validatedInput);
     } else if (name == 'col') {
-      this.colTargets[index] = validatedInput;
+      this.addColTarget(index, validatedInput);
     } else if (name == 'grid') {
       const row = Math.floor(index / this.rows);
       const col = index % this.columns;
       this.grid[index] = validatedInput;
-      this.rowWeights[row][col] = validatedInput;
-      this.colWeights[col][row] = validatedInput;
+      this.addRowWeight(row, col, validatedInput);
+      this.addColWeight(col, row, validatedInput);
     }
 
     input.value = validatedInput.toString();
@@ -94,10 +103,10 @@ export class CrossSumGrid {
   }
 
   handleKeydown(event: KeyboardEvent, index: number): void {
-    const arrows = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight']
+    const arrows = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
 
     if (arrows.includes(event.key)) {
-      event.preventDefault()
+      event.preventDefault();
     }
     clearTimeout(this.debounceTimeout);
     this.debounceTimeout = setTimeout(() => {
@@ -144,7 +153,7 @@ export class CrossSumGrid {
         event.preventDefault();
         this.focusCell(nextIndex);
       }
-    }, 5)
+    }, 5);
   }
 
   focusCell(index: number): void {
