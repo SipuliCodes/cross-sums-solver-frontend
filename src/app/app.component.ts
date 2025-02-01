@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 
 import { CrossSumGrid } from './core/cross-sum-grid/cross-sum-grid.component';
 import { CrossSumService } from './services/cross-sum.service';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CrossSumGrid, FormsModule],
+  imports: [RouterOutlet, CrossSumGrid, FormsModule, NgIf],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
@@ -18,10 +19,11 @@ export class AppComponent {
   gridRows: number = this.gridSize;
   gridColumns: number = this.gridSize;
   gridCellSize: number = 40;
+  answer: number[] | undefined = undefined;
+  errorMessage: string = "";
 
   rowTargets: number[] = new Array<number>(this.gridSize);
   colTargets: number[] = new Array<number>(this.gridSize);
-
   rowWeights: number[][] = Array.from({length: this.gridSize}, () => [])
   colWeights: number[][] = Array.from({length: this.gridSize}, () => [])
 
@@ -63,10 +65,33 @@ export class AppComponent {
     setTimeout(() => input.select(), 0);
   }
 
+  validateGridData(rowTargets: number[], colTargets: number[], rowWeights: number[][], colWeights: number[][], gridSize: number ) {
+    const correctRowTargets = rowTargets.every(value => value != undefined && value != null) && rowTargets.length == gridSize;
+    const correctColTargets = colTargets.every(
+      (value) => value != undefined && value != null
+    ) && colTargets.length == gridSize
+    const correctRowWeights = rowWeights.every(
+      (sublist) => sublist.every( value => value != undefined && value != null) && sublist.length == gridSize
+    ) && rowWeights.length == gridSize
+    const correctColWeights =
+      colWeights.every(
+        (sublist) =>
+          sublist.every((value) => value != undefined && value != null) &&
+          sublist.length == gridSize
+      ) && colWeights.length == gridSize;
+    
+    return (correctRowTargets && correctColTargets && correctRowWeights &&correctColWeights)
+  }
+
   onSolveClick(): void {
-    console.log(this.rowTargets)
-    console.log(this.colTargets)
-    console.log(this.rowWeights)
-    console.log(this.colWeights)
+    if (this.validateGridData(this.rowTargets, this.colTargets, this.rowWeights, this.colWeights, this.gridSize)) {
+      const observable = this.crossSumService.checkAnswer(this.rowTargets, this.colTargets, this.rowWeights, this.colWeights)
+      observable.subscribe(answer => {
+        this.answer = Array.from(Object.entries(answer), ([_, value]) => value).flat();
+      })
+    } else {
+      this.errorMessage = "Missing data. Fill all cells and try again!"
+      setTimeout(() => this.errorMessage = "", 5000)
+    }
   }
 }

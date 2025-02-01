@@ -37,6 +37,14 @@
   text-align: center;
 }
 
+.cell-correct {
+  background-color: #acdb73;
+}
+
+.cell-remove {
+  background-color: #e98b84;
+}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;

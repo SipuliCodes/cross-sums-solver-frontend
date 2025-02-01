@@ -37,6 +37,7 @@
         *ngFor="let cell of [].constructor(rows * columns); let i = index;" 
         [id]="'cell-' + gridIndices[i]"
         class="grid-cell" 
+        [ngClass]="answer?.[i] == 1 ? 'cell-correct' : answer?.[i] == 0 ? 'cell-remove' : ''"
         (change)="changeInput($event, i, 'grid')"
         (keydown)="handleKeydown($event, gridIndices[i])"
         (focus)="handleFocus($event)"/>

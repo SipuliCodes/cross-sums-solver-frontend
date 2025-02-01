@@ -11,6 +11,7 @@
       [cellSize]="gridCellSize"
       [rowTargets]="rowTargets"
       [colTargets]="colTargets"
+      [answer]="answer"
       (newRowTarget)="addRowTarget($event)"
       (newColTarget)="addColTarget($event)"
       (newRowWeight)="addRowWeight($event)"
@@ -18,6 +19,7 @@
     >
     </cross-sum-grid>
     <button (click)="onSolveClick()" class="solve-button">Solve</button>
+    <p *ngIf="errorMessage" class="error-message">{{errorMessage}}</p>
   </div>
 </main>
 

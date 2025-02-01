@@ -14,6 +14,7 @@ export class CrossSumGrid {
   @Input() cellSize!: number;
   @Input() rowTargets!: number[];
   @Input() colTargets!: number[];
+  @Input() answer!: number[] | undefined;
 
   rowTargetIndices!: number[];
   colTargetIndices!: number[];

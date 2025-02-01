@@ -36,6 +36,16 @@
   background-image: linear-gradient(rgb(0 0 0/40%) 0 0);
 }
 
+.error-message {
+  position: absolute;
+  background-color: #e98b84;
+  padding: 8px 16px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%);
+  border-radius: 16px;
+}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
