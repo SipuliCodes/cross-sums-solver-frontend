@@ -2,8 +2,8 @@
   <div class="content">
     <h1 class="header">Cross sums solver</h1>
     <div class="grid-size-box">
-      <h3 class="grid-size-heaeder">Grid size:</h3>
-      <input [(ngModel)]="gridSize" (input)="changeGridSize(4,10)" min="4" max="10" class="grid-size-input" type="number" (focus)="handleFocus($event)" />
+      <label for="grid-size-input" class="grid-size-heaeder">Grid size:</label>
+      <input id="grid-size-input"[(ngModel)]="gridSize" (input)="changeGridSize(4,10)" min="4" max="10" class="grid-size-input" type="number" (focus)="handleFocus($event)" />
     </div>
     <cross-sum-grid
       [rows]="gridRows"
