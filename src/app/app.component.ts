@@ -14,6 +14,7 @@ import { NgIf } from '@angular/common';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
+  title = 'Cross Sums Solver'
   crossSumService = inject(CrossSumService);
   gridSize: number = 8;
   gridRows: number = this.gridSize;
