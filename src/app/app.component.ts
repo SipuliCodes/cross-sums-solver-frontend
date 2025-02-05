@@ -88,7 +88,12 @@ export class AppComponent {
     if (this.validateGridData(this.rowTargets, this.colTargets, this.rowWeights, this.colWeights, this.gridSize)) {
       const observable = this.crossSumService.checkAnswer(this.rowTargets, this.colTargets, this.rowWeights, this.colWeights)
       observable.subscribe(answer => {
-        this.answer = Array.from(Object.entries(answer), ([_, value]) => value).flat();
+        if( "success" in answer && answer.success && "answer" in answer && Array.isArray(answer.answer))
+          this.answer = answer.answer.flat();
+        else {
+        this.errorMessage = "No answer found or incorrect inputs. Please check your inputs.";
+        setTimeout(() => (this.errorMessage = ""), 5000);
+        }
       })
     } else {
       this.errorMessage = "Missing data. Fill all cells and try again!"
